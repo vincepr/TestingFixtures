@@ -23,7 +23,7 @@
         <RepositoryType>git</RepositoryType>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReleaseNotes>See https://github.com/vincepr/TestingFixtures/releases/</PackageReleaseNotes>
-        <PackageTags>nunit test testfixture testing sqlite</PackageTags>
+        <PackageTags>nunit test testfixture testing sqlite efcore entity-framework</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
