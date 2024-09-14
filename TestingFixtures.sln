@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileBased", "FileBased\FileBased.csproj", "{3639C848-0A5A-4056-B4BA-47806C5F8D2F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileBasedContextFactory", "FileBasedContextFactory\FileBasedContextFactory.csproj", "{3639C848-0A5A-4056-B4BA-47806C5F8D2F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.FileBased", "Tests.FileBased\Tests.FileBased.csproj", "{5D5940F7-9EE6-441E-AB72-9285810F3BA0}"
 EndProject
@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.TestUtilities", "Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.FileBasedTestFixture", "Tests.FileBasedTestFixture\Tests.FileBasedTestFixture.csproj", "{A51B49E5-478A-4D8B-9D69-152266C7E30C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgresDockerBased", "PostgresDockerBased\PostgresDockerBased.csproj", "{9A1ACCF7-F6B5-49CB-9F72-4156C9EA4612}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgresDockerContextFactory", "PostgresDockerContextFactory\PostgresDockerContextFactory.csproj", "{9A1ACCF7-F6B5-49CB-9F72-4156C9EA4612}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.PostgresDockerBased", "Tests.PostgresDockerBased\Tests.PostgresDockerBased.csproj", "{6F4D3B7F-0AF2-4667-A7AF-F85787871BB7}"
 EndProject

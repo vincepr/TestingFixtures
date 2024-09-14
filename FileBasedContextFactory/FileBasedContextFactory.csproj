@@ -8,27 +8,27 @@
         <RootNamespace>TestingFixtures</RootNamespace>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-
-        <PackageId>TestingFixtures.PostgresDockerBased</PackageId>
+        
+        <PackageId>TestingFixtures.FileBasedContextFactory</PackageId>
         <Version>0.1.0</Version>
     </PropertyGroup>
 
     <PropertyGroup Label="Package info">
         <Authors>Vincepr</Authors>
         <PackageDescription>
-            Generic-ContextFactory to test DbContext or IDbContextFactory directly with Postgresql and TestContainers.
+            Generic-ContextFactory to test DbContext or IDbContextFactory directly with Sqlite.
         </PackageDescription>
         <PackageProjectUrl>https://github.com/vincepr/TestingFixtures</PackageProjectUrl>
         <RepositoryUrl>https://github.com/vincepr/TestingFixtures</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReleaseNotes>See https://github.com/vincepr/TestingFixtures/releases/</PackageReleaseNotes>
-        <PackageTags>test testfixture testing postgres postgresql testcontainer efcore entity-framework</PackageTags>
+        <PackageTags>test testfixture testing sqlite efcore entity-framework</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
-      <PackageReference Include="Testcontainers.PostgreSql" Version="3.10.0" />
+<!--      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.8" />-->
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="8.0.8" />
     </ItemGroup>
 
 </Project>

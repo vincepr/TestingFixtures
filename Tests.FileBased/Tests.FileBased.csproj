@@ -25,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FileBased\FileBased.csproj" />
+      <ProjectReference Include="..\FileBasedContextFactory\FileBasedContextFactory.csproj" />
       <ProjectReference Include="..\Tests.TestUtilities\Tests.TestUtilities.csproj" />
     </ItemGroup>
 

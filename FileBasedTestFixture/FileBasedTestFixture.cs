@@ -13,12 +13,14 @@ namespace TestingFixtures;
 public class FileBasedTestFixture<TCtx>
     where TCtx : DbContext
 {
+    private FileBasedContextFactory<TCtx> _contextFactory = null!;
+
     /// <summary>
     /// The exposed ContextFactory. Each Test-Run will receive its own instance of a fresh sqlite-database.
     /// </summary>
     /// <typeparam name="TCtx"><see cref="DbContext"/> of the database-schema tests are run against. </typeparam>
     /// <remarks>DbContext is expected to implement a ctor like: DbContext(DbContextOptions options) </remarks>
-    protected FileBasedContextFactory<TCtx> ContextFactory = null!;
+    public IDbContextFactory<TCtx> ContextFactory = null!;
 
     /// <summary>
     /// Identifies a method to be called immediately before each test is run. Initializes the database.
@@ -26,7 +28,8 @@ public class FileBasedTestFixture<TCtx>
     [SetUp]
     public virtual async Task BaseSetUp()
     {
-        ContextFactory = await FileBasedContextFactory<TCtx>.New();
+        _contextFactory = await FileBasedContextFactory<TCtx>.New();
+        ContextFactory = _contextFactory;
     }
     
     /// <summary>
@@ -35,6 +38,6 @@ public class FileBasedTestFixture<TCtx>
     [TearDown]
     public void BaseTearDown()
     {
-        ContextFactory.Dispose();
+        _contextFactory.Dispose();
     }
 }

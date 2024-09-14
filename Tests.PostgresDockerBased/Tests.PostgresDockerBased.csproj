@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\PostgresDockerBased\PostgresDockerBased.csproj" />
+      <ProjectReference Include="..\PostgresDockerContextFactory\PostgresDockerContextFactory.csproj" />
       <ProjectReference Include="..\Tests.TestUtilities\Tests.TestUtilities.csproj" />
     </ItemGroup>
 
