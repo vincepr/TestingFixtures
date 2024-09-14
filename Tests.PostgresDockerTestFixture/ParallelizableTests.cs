@@ -9,7 +9,7 @@ namespace Tests.PostgresDockerTestFixture;
 public class ParallelizableTests : SimplePostgresDockerTestFixture
 {
     // note: we know [FixtureLifeCycle(LifeCycle.InstancePerTestCase)] is set  in PostgresDockerTestFixture.
-    // so we can savely use these fields in a parallelized context.
+    // so we can safely use these fields in a parallelized context.
     private IDbContextFactory<SimpleDbContext> _contextFactory = null!;
     private SimpleDbContext _context = null!;
 

@@ -6,6 +6,9 @@ namespace TestUtilities.DatabaseContexts;
 
 public class SimpleDbContext : DbContext
 {
+    // note:
+    // * both SimpleDbContext(DbContextOptions opts) or SimpleDbContext(DbContext<OptionsSimpleDbContext> opts)
+    // * will work equally with with Reflection implementation of the New() of the Testing-ContextFactories.
     public SimpleDbContext(DbContextOptions options) : base(options)
     {
     }
