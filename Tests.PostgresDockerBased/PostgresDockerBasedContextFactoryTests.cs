@@ -1,5 +1,5 @@
-﻿using ClassLibrary1;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using TestingFixtures;
 using TestUtilities.DatabaseContexts;
 using TestUtilities.TestUtilities;
 

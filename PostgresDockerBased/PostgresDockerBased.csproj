@@ -4,8 +4,29 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>ClassLibrary1</RootNamespace>
+
+        <RootNamespace>TestingFixtures</RootNamespace>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+
+        <PackageId>TestingFixtures.PostgresDockerBased</PackageId>
+        <Version>0.1.0</Version>
     </PropertyGroup>
+
+    <PropertyGroup Label="Package info">
+        <Authors>Vincepr</Authors>
+        <PackageDescription>
+            TestFixture to test DbContext or IDbContextFactory directly with Postgresql and TestContainers.
+        </PackageDescription>
+        <PackageProjectUrl>https://github.com/vincepr/TestingFixtures</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/vincepr/TestingFixtures</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReleaseNotes>See https://github.com/vincepr/TestingFixtures/releases/</PackageReleaseNotes>
+        <PackageTags>nunit test testfixture testing postgres postgresql testcontainer</PackageTags>
+    </PropertyGroup>
+
+
 
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />

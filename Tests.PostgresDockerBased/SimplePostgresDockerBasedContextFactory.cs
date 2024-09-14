@@ -1,6 +1,6 @@
-﻿using ClassLibrary1;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Testcontainers.PostgreSql;
+using TestingFixtures;
 using TestUtilities.DatabaseContexts;
 
 namespace Tests.PostgresDockerBased;

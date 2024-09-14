@@ -3,8 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Testcontainers.PostgreSql;
 
-namespace ClassLibrary1;
+namespace TestingFixtures;
 
+/// <inheritdoc cref="IDbContextFactory{TContext}"/>
+/// <remarks>DbContext is expected to implement a ctor like: DbContext(DbContextOptions options) </remarks>
 public class PostgresDockerBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyncDisposable, IDisposable
     where TCtx : DbContext
 {
@@ -12,6 +14,7 @@ public class PostgresDockerBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, 
     private readonly DbContextOptions<TCtx> _options;
     private readonly Func<DbContextOptions<TCtx>, TCtx> _ctxFactory;
 
+    /// <inheritdoc cref="IDbContextFactory{TContext}"/>
     protected PostgresDockerBasedContextFactory(DbContextOptions<TCtx> options,
         Func<DbContextOptions<TCtx>, TCtx> ctxFactory, PostgreSqlContainer postgreSqlContainer)
     {
@@ -35,8 +38,7 @@ public class PostgresDockerBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, 
 
     private static async Task<PostgreSqlContainer> CreateNewTestContainer()
     {
-        var container = new PostgreSqlBuilder()
-            .Build();
+        var container = new PostgreSqlBuilder().Build();
         await container.StartAsync();
         return container;
     }
@@ -66,11 +68,13 @@ public class PostgresDockerBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, 
         return factory;
     }
 
+    /// <inheritdoc />
     public TCtx CreateDbContext()
     {
         return _ctxFactory(_options);
     }
 
+    /// <inheritdoc />
     public Task<TCtx> CreateDbContextAsync(CancellationToken cancellationToken = default)
         => Task.FromResult(CreateDbContext());
 
@@ -86,11 +90,13 @@ public class PostgresDockerBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, 
         }
     }
 
+    /// <inheritdoc />
     public async void Dispose()
     {
         await _postgreSqlContainer.DisposeAsync();
     }
 
+    /// <inheritdoc />
     public ValueTask DisposeAsync()
     {
         return _postgreSqlContainer.DisposeAsync();

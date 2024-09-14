@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
-using PostgresDockerTestFixture;
+using TestingFixtures;
 using TestUtilities.DatabaseContexts;
 using TestUtilities.TestUtilities;
 

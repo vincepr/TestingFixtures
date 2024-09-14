@@ -1,8 +1,10 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
-namespace FileBased;
+namespace TestingFixtures;
 
+/// <inheritdoc cref="IDbContextFactory{TContext}"/>
+/// <remarks>DbContext is expected to implement a ctor like: DbContext(DbContextOptions options) </remarks>
 public class FileBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyncDisposable, IDisposable
     where TCtx : DbContext
 {
@@ -10,6 +12,7 @@ public class FileBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyncDisp
     private readonly Func<DbContextOptions<TCtx>, TCtx> _ctxFactory;
     private readonly string _filePath;
 
+    /// <inheritdoc cref="IDbContextFactory{TContext}"/>
     protected FileBasedContextFactory(DbContextOptions<TCtx> options, string filePath, Func<DbContextOptions<TCtx>, TCtx> ctxFactory)
     {
         _options = options;
@@ -53,11 +56,13 @@ public class FileBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyncDisp
         return factory;
     }
 
+    /// <inheritdoc />
     public TCtx CreateDbContext()
     {
         return _ctxFactory(_options);
     }
     
+    /// <inheritdoc />
     public Task<TCtx> CreateDbContextAsync(CancellationToken cancellationToken = default)
         => Task.FromResult(CreateDbContext());
 
@@ -65,19 +70,20 @@ public class FileBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyncDisp
     {
         try
         {
-            File.Delete(_filePath);
+            Cleanup();
         }
         catch
         {
             // ignored
         } 
     }
-    
+
+    /// <inheritdoc />
     public void Dispose()
     {
         try
         {
-            File.Delete(_filePath);
+            Cleanup();
         }
         catch
         {
@@ -85,11 +91,12 @@ public class FileBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyncDisp
         }
     }
 
+    /// <inheritdoc />
     public ValueTask DisposeAsync()
     {
         try
         {
-            File.Delete(_filePath);
+            Cleanup();
         }
         catch (Exception e)
         {
@@ -98,4 +105,6 @@ public class FileBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyncDisp
         }
         return ValueTask.CompletedTask;
     }
+
+    private void Cleanup() => File.Delete(_filePath);
 }

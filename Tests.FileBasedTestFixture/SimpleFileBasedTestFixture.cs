@@ -1,4 +1,4 @@
-﻿using FileBasedTestFixture;
+﻿using TestingFixtures;
 using TestUtilities.DatabaseContexts;
 
 namespace Tests.FileBasedTestFixture;

@@ -1,4 +1,4 @@
-﻿using PostgresDockerTestFixture;
+﻿using TestingFixtures;
 using TestUtilities.DatabaseContexts;
 
 namespace Tests.PostgresDockerTestFixture;
