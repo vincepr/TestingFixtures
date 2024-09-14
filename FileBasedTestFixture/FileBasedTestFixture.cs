@@ -24,7 +24,7 @@ public class FileBasedTestFixture<TCtx>
     /// Identifies a method to be called immediately before each test is run. Initializes the database.
     /// </summary>
     [SetUp]
-    public async Task BaseSetUp()
+    public virtual async Task BaseSetUp()
     {
         ContextFactory = await FileBasedContextFactory<TCtx>.New();
     }
