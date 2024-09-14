@@ -22,7 +22,6 @@ public class CustomFileBasedFixture : FileBasedTestFixture<CustomDbContext>
         var sales = (await ContextFactory.CreateDbContextAsync()).Sales;
         foreach (var sale in sales)
         {
-            Console.WriteLine(sale);
             sale.Amount.Should().Be(AmountSold);
         }
 

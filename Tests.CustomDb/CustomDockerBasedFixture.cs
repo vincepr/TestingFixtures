@@ -22,7 +22,6 @@ public class CustomDockerBasedFixture : PostgresDockerTestFixture<CustomDbContex
         var sales = (await ContextFactory.CreateDbContextAsync()).Sales;
         foreach (var sale in sales)
         {
-            Console.WriteLine(sale);
             sale.Amount.Should().Be(AmountSold);
         }
 

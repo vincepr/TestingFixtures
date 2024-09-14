@@ -3,6 +3,4 @@ using TestUtilities.DatabaseContexts;
 
 namespace Tests.PostgresDockerTestFixture;
 
-public class SimplePostgresDockerTestFixture : PostgresDockerTestFixture<SimpleDbContext>
-{
-}
+public class SimplePostgresDockerTestFixture : PostgresDockerTestFixture<SimpleDbContext>;
