@@ -13,7 +13,7 @@ namespace TestingFixtures;
 public class PostgresDockerTestFixture<TCtx>
     where TCtx : DbContext
 {
-    private PostgresDockerBasedContextFactory<TCtx> _contextFactory = null!;
+    private PostgresDockerContextFactory<TCtx> _contextFactory = null!;
     
     /// <summary>
     /// The exposed ContextFactory. Each Test-Run will receive its own instance of a fresh sqlite-database.
@@ -28,7 +28,7 @@ public class PostgresDockerTestFixture<TCtx>
     [SetUp]
     public virtual async Task BaseSetUp()
     {
-        _contextFactory = await PostgresDockerBasedContextFactory<TCtx>.New();
+        _contextFactory = await PostgresDockerContextFactory<TCtx>.New();
         ContextFactory = _contextFactory;
     }
     

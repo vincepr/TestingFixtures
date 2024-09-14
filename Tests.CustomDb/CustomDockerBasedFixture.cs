@@ -13,7 +13,7 @@ public class CustomDockerBasedFixture : PostgresDockerTestFixture<CustomDbContex
     [SetUp]
     public override async Task BaseSetUp()
     {
-        ContextFactory = await PostgresDockerBasedContextFactory<CustomDbContext>.New(o => new CustomDbContext(o, AmountSold));
+        ContextFactory = await PostgresDockerContextFactory<CustomDbContext>.New(o => new CustomDbContext(o, AmountSold));
     }
     
     [Test]

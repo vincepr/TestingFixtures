@@ -3,7 +3,7 @@ using TestingFixtures;
 using TestUtilities.DatabaseContexts;
 using TestUtilities.TestUtilities;
 
-namespace FileBased.Tests;
+namespace Tests.FileBased;
 
 public class FileBasedCtxFactoryTests
 {

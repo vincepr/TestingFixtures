@@ -5,14 +5,14 @@ using TestUtilities.DatabaseContexts;
 
 namespace Tests.PostgresDockerBased;
 
-public class SimplePostgresDockerBasedContextFactory : PostgresDockerBasedContextFactory<SimpleDbContext>
+public class SimplePostgresDockerContextFactory : PostgresDockerContextFactory<SimpleDbContext>
 {
-    protected SimplePostgresDockerBasedContextFactory(DbContextOptions<SimpleDbContext> options,
+    protected SimplePostgresDockerContextFactory(DbContextOptions<SimpleDbContext> options,
         Func<DbContextOptions<SimpleDbContext>, SimpleDbContext> ctxFactory,
         PostgreSqlContainer postgreSqlContainer) : base(options, ctxFactory, postgreSqlContainer)
     {
     }
     
-    public static Task<PostgresDockerBasedContextFactory<SimpleDbContext>> NewFuncWithoutReflection() 
+    public static Task<PostgresDockerContextFactory<SimpleDbContext>> NewFuncWithoutReflection() 
         => New(opts => new SimpleDbContext(opts));
 }

@@ -16,7 +16,7 @@ public class PostgresDockerBasedContextFactoryTests
     [Test]
     public async Task GenericFactory_UsingReflectionForConstructor()
     {
-        await using var contextFactory = await PostgresDockerBasedContextFactory<SimpleDbContext>.New();
+        await using var contextFactory = await PostgresDockerContextFactory<SimpleDbContext>.New();
         await RunAndAssertTests(contextFactory);
     }
 
@@ -25,7 +25,7 @@ public class PostgresDockerBasedContextFactoryTests
     public async Task GenericFactory_UsingManualConstructor()
     {
         await using var contextFactory =
-            await PostgresDockerBasedContextFactory<SimpleDbContext>.New(o => new SimpleDbContext(o));
+            await PostgresDockerContextFactory<SimpleDbContext>.New(o => new SimpleDbContext(o));
         await RunAndAssertTests(contextFactory);
     }
 
@@ -33,7 +33,7 @@ public class PostgresDockerBasedContextFactoryTests
     [Test]
     public async Task SpecificFactory_UsingReflectionForConstructor()
     {
-        await using var contextFactory = await SimplePostgresDockerBasedContextFactory.New();
+        await using var contextFactory = await SimplePostgresDockerContextFactory.New();
         await RunAndAssertTests(contextFactory);
     }
 
@@ -41,7 +41,7 @@ public class PostgresDockerBasedContextFactoryTests
     [Test]
     public async Task SpecificFactory_UsingManualConstructor()
     {
-        await using var contextFactory = await SimplePostgresDockerBasedContextFactory.New(o => new SimpleDbContext(o));
+        await using var contextFactory = await SimplePostgresDockerContextFactory.New(o => new SimpleDbContext(o));
         await RunAndAssertTests(contextFactory);
     }
 
@@ -49,11 +49,11 @@ public class PostgresDockerBasedContextFactoryTests
     [Test]
     public async Task SpecificFactory_ProvidingOwnNewFunc()
     {
-        await using var contextFactory = await SimplePostgresDockerBasedContextFactory.NewFuncWithoutReflection();
+        await using var contextFactory = await SimplePostgresDockerContextFactory.NewFuncWithoutReflection();
         await RunAndAssertTests(contextFactory);
     }
     
-    private async Task RunAndAssertTests(PostgresDockerBasedContextFactory<SimpleDbContext> testFactory)
+    private async Task RunAndAssertTests(PostgresDockerContextFactory<SimpleDbContext> testFactory)
     {
         var articles = (await testFactory.CreateDbContextAsync()).Articles.Include(a => a.Prices).ToList();
         SeedData.AssertCorrectSeedData(articles);

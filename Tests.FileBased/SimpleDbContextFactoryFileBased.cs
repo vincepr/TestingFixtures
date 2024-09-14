@@ -2,7 +2,7 @@
 using TestingFixtures;
 using TestUtilities.DatabaseContexts;
 
-namespace FileBased.Tests;
+namespace Tests.FileBased;
 
 public class SimpleFileBasedCtxFactory : FileBasedContextFactory<SimpleDbContext>
 {

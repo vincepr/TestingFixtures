@@ -30,7 +30,7 @@ public class FactoriesManuallyConstructedTests
     public async Task Docker_ManuallyConstructing()
     {
         const uint amountSold = 10;
-        _contextFactory = await PostgresDockerBasedContextFactory<CustomDbContext>
+        _contextFactory = await PostgresDockerContextFactory<CustomDbContext>
             .New(opts => new CustomDbContext(opts, amountSold));
         var sales = (await _contextFactory.CreateDbContextAsync()).Sales;
         foreach (var sale in sales)

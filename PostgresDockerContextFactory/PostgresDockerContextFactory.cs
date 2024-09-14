@@ -7,7 +7,7 @@ namespace TestingFixtures;
 
 /// <inheritdoc cref="IDbContextFactory{TContext}"/>
 /// <remarks>DbContext is expected to implement a ctor like: DbContext(DbContextOptions options) </remarks>
-public class PostgresDockerBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyncDisposable, IDisposable
+public class PostgresDockerContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyncDisposable, IDisposable
     where TCtx : DbContext
 {
     private readonly PostgreSqlContainer _postgreSqlContainer;
@@ -15,7 +15,7 @@ public class PostgresDockerBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, 
     private readonly Func<DbContextOptions<TCtx>, TCtx> _ctxFactory;
 
     /// <inheritdoc cref="IDbContextFactory{TContext}"/>
-    protected PostgresDockerBasedContextFactory(DbContextOptions<TCtx> options,
+    protected PostgresDockerContextFactory(DbContextOptions<TCtx> options,
         Func<DbContextOptions<TCtx>, TCtx> ctxFactory, PostgreSqlContainer postgreSqlContainer)
     {
         _options = options;
@@ -28,13 +28,13 @@ public class PostgresDockerBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, 
     /// </summary>
     /// <returns>The <see cref="IDbContextFactory{TContext}"/>.</returns>
     /// <remarks>DbContext is expected to implement a ctor like: DbContext(DbContextOptions options) </remarks>
-    public static async Task<PostgresDockerBasedContextFactory<TCtx>> New()
+    public static async Task<PostgresDockerContextFactory<TCtx>> New()
     {
         PostgreSqlContainer container = await CreateNewTestContainer();
         var opts = new DbContextOptionsBuilder<TCtx>();
         var dataSourceBuilder = new NpgsqlDataSourceBuilder(container.GetConnectionString());
         opts.UseNpgsql(dataSourceBuilder.Build());
-        var factory = new PostgresDockerBasedContextFactory<TCtx>(opts.Options, CtxFactoryViaReflection(opts.Options), container);
+        var factory = new PostgresDockerContextFactory<TCtx>(opts.Options, CtxFactoryViaReflection(opts.Options), container);
         // await factory.CreateDbContext().Database.EnsureDeletedAsync();   // we do not need to call this, because a new container is created anyway
         await (await factory.CreateDbContextAsync()).Database.EnsureCreatedAsync();
         return factory;
@@ -54,7 +54,7 @@ public class PostgresDockerBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, 
         ConstructorInfo? ctor = type.GetConstructor(new[] { typeof(DbContextOptions<TCtx>) });
         object? instance = ctor?.Invoke(new object[] { options });
         _ = instance as TCtx ?? throw new InvalidOperationException(
-            $"Reflection failed. Could not locate ctor. Just provide the ContextFactory manually. ex:  '{nameof(PostgresDockerBasedContextFactory<TCtx>)}<MyCtx>.New(opt => MyCtx(opt))'");
+            $"Reflection failed. Could not locate ctor. Just provide the ContextFactory manually. ex:  '{nameof(PostgresDockerContextFactory<TCtx>)}<MyCtx>.New(opt => MyCtx(opt))'");
         return (opts) => (TCtx)ctor?.Invoke(new object[] { opts })!;
     }
 
@@ -64,14 +64,14 @@ public class PostgresDockerBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, 
     /// Example: "FileBasedContextFactor.New(opts => new MyContext(opts)"
     /// </summary>
     /// <returns>The <see cref="IDbContextFactory{TContext}"/>.</returns>
-    public static async Task<PostgresDockerBasedContextFactory<TCtx>> New(
+    public static async Task<PostgresDockerContextFactory<TCtx>> New(
         Func<DbContextOptions<TCtx>, TCtx> contextFactory)
     {
         PostgreSqlContainer container = await CreateNewTestContainer();
         var opts = new DbContextOptionsBuilder<TCtx>();
         var dataSourceBuilder = new NpgsqlDataSourceBuilder(container.GetConnectionString());
         opts.UseNpgsql(dataSourceBuilder.Build());
-        var factory = new PostgresDockerBasedContextFactory<TCtx>(opts.Options, contextFactory, container);
+        var factory = new PostgresDockerContextFactory<TCtx>(opts.Options, contextFactory, container);
         // await factory.CreateDbContext().Database.EnsureDeletedAsync();   // we do not need to call this, because a new container is created anyway
         await (await factory.CreateDbContextAsync()).Database.EnsureCreatedAsync();
         return factory;
@@ -87,7 +87,7 @@ public class PostgresDockerBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, 
     public Task<TCtx> CreateDbContextAsync(CancellationToken cancellationToken = default)
         => Task.FromResult(CreateDbContext());
 
-    ~PostgresDockerBasedContextFactory()
+    ~PostgresDockerContextFactory()
     {
         try
         {
