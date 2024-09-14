@@ -5,6 +5,7 @@ using NUnit.Framework;
 namespace PostgresDockerTestFixture;
 
 [TestFixture]
+[FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
 public class PostgresDockerTestFixture<TCtx>
     where TCtx : DbContext
 {

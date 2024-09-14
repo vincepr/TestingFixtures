@@ -5,6 +5,7 @@ using NUnit.Framework;
 namespace FileBasedTestFixture;
 
 [TestFixture]
+[FixtureLifeCycle(LifeCycle.InstancePerTestCase)] 
 public class FileBasedTestFixture<TCtx>
     where TCtx : DbContext
 {
