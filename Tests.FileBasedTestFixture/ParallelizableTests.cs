@@ -23,41 +23,41 @@ public class ParallelizableTests : SimpleFileBasedTestFixture
      */
     
     [Test]
-    public void T1()
+    public async Task T1()
     {
-        var articles = ContextFactory.CreateDbContext().Articles.Include(a => a.Prices).ToList();
-        SeedData.AssertCorrectData(articles);
-        _context = ContextFactory.CreateDbContext();
+        var articles = (await ContextFactory.CreateDbContextAsync()).Articles.Include(a => a.Prices).ToList();
+        SeedData.AssertCorrectSeedData(articles);
+        _context = await ContextFactory.CreateDbContextAsync();
         _contextFactory = ContextFactory;
-        ModifyData.AssertModificationPossible(_context, _contextFactory);
+        await ModifyData.AssertModificationPossible(_context, _contextFactory);
     }
     
     [Test]
-    public void T2()
+    public async Task T2()
     {
-        var articles = ContextFactory.CreateDbContext().Articles.Include(a => a.Prices).ToList();
-        SeedData.AssertCorrectData(articles);
-        _context = ContextFactory.CreateDbContext();
+        var articles = (await ContextFactory.CreateDbContextAsync()).Articles.Include(a => a.Prices).ToList();
+        SeedData.AssertCorrectSeedData(articles);
+        _context = await ContextFactory.CreateDbContextAsync();
         _contextFactory = ContextFactory;
-        ModifyData.AssertModificationPossible(_context, _contextFactory);
+        await ModifyData.AssertModificationPossible(_context, _contextFactory);
     }
     
     [Test]
-    public void T3()
+    public async Task T3()
     {
-        var articles = ContextFactory.CreateDbContext().Articles.Include(a => a.Prices).ToList();
-        SeedData.AssertCorrectData(articles);
-        _context = ContextFactory.CreateDbContext();
+        var articles = (await ContextFactory.CreateDbContextAsync()).Articles.Include(a => a.Prices).ToList();
+        SeedData.AssertCorrectSeedData(articles);
+        _context = await ContextFactory.CreateDbContextAsync();
         _contextFactory = ContextFactory;
-        ModifyData.AssertModificationPossible(_context, _contextFactory);
+        await ModifyData.AssertModificationPossible(_context, _contextFactory);
     }
     
     [Test]
-    public void T4()
+    public async Task T4()
     {
-        var articles = ContextFactory.CreateDbContext().Articles.Include(a => a.Prices).ToList();
-        SeedData.AssertCorrectData(articles);
-        _context = ContextFactory.CreateDbContext();
+        var articles = (await ContextFactory.CreateDbContextAsync()).Articles.Include(a => a.Prices).ToList();
+        SeedData.AssertCorrectSeedData(articles);
+        _context = await ContextFactory.CreateDbContextAsync();
         _contextFactory = ContextFactory;
-        ModifyData.AssertModificationPossible(_context, _contextFactory);
+        await ModifyData.AssertModificationPossible(_context, _contextFactory);
     }}

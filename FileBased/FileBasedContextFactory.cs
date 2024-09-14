@@ -20,7 +20,11 @@ public class FileBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyncDisp
         _ctxFactory = ctxFactory;
     }
     
-    // one way is to find constructor via reflection:
+    /// <summary>
+    /// Initializes the <see cref="IDbContextFactory{TContext}"/> by trying to find a suitable constructor via reflection.
+    /// </summary>
+    /// <returns>The <see cref="IDbContextFactory{TContext}"/>.</returns>
+    /// <remarks>DbContext is expected to implement a ctor like: DbContext(DbContextOptions options) </remarks>
     public static async Task<FileBasedContextFactory<TCtx>> New()
     {
         var opts = new DbContextOptionsBuilder<TCtx>();
@@ -39,11 +43,16 @@ public class FileBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyncDisp
         Type type = typeof(TCtx);
         ConstructorInfo? ctor = type.GetConstructor(new[] { typeof(DbContextOptions<TCtx>) });
         object? instance = ctor?.Invoke(new object[] { options });
-        _ = instance as TCtx ?? throw new InvalidOperationException("Reflection failed. Could not locate ctor. Just provide the ContextFactory manually. ex: 'FileBasedContextFactory<MyCtx>.New(opt => MyCtx(opt))'");
+        _ = instance as TCtx ?? throw new InvalidOperationException($"Reflection failed. Could not locate ctor. Just provide the ContextFactory manually. ex: '{nameof(FileBasedContextFactory<TCtx>)}<MyCtx>.New(opt => MyCtx(opt))'");
         return (opts) => (TCtx)ctor?.Invoke(new object[] { opts })!;
     }
     
-    // alternative we provide a way to manually provide it via a factory:
+    /// <summary>
+    /// Initializes the <see cref="IDbContextFactory{TContext}"/>. Requires the user to provide contextFactory.
+    /// This way DbContext implementations with any custom constructors can be used.
+    /// Example: "FileBasedContextFactor.New(opts => new MyContext(opts)"
+    /// </summary>
+    /// <returns>The <see cref="IDbContextFactory{TContext}"/>.</returns>
     public static async Task<FileBasedContextFactory<TCtx>> New(Func<DbContextOptions<TCtx>, TCtx> contextFactory)
     {
         var opts = new DbContextOptionsBuilder<TCtx>();

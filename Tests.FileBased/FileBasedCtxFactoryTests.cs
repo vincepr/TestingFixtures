@@ -29,54 +29,43 @@ public class FileBasedCtxFactoryTests
     public async Task GenericFactory_UsingReflectionForConstructor()
     {
         await using var contextFactory = await FileBasedContextFactory<SimpleDbContext>.New();
-        var articles = contextFactory.CreateDbContext().Articles.Include(a => a.Prices).ToList();
-        SeedData.AssertCorrectData(articles);
-        _context = contextFactory.CreateDbContext();
-        _contextFactory = contextFactory;
-        ModifyData.AssertModificationPossible(_context, _contextFactory);
+        await RunAndAssertTests(contextFactory);
     }
-    
+
     [Test]
     public async Task GenericFactory_UsingManualConstructor()
     {
-        using var contextFactory = await FileBasedContextFactory<SimpleDbContext>.New(o => new SimpleDbContext(o));
-        var articles = contextFactory.CreateDbContext().Articles.Include(a => a.Prices).ToList();
-        SeedData.AssertCorrectData(articles);
-        _context = contextFactory.CreateDbContext();
-        _contextFactory = contextFactory;
-        ModifyData.AssertModificationPossible(_context, _contextFactory);
+        await using var contextFactory = await FileBasedContextFactory<SimpleDbContext>.New(o => new SimpleDbContext(o));
+        await RunAndAssertTests(contextFactory);
     }
     
     [Test]
     public async Task SpecificFactory_UsingReflectionForConstructor()
     {
-        using var contextFactory = await SimpleFileBasedCtxFactory.New();
-        var articles = contextFactory.CreateDbContext().Articles.Include(a => a.Prices).ToList();
-        SeedData.AssertCorrectData(articles);
-        _context = contextFactory.CreateDbContext();
-        _contextFactory = contextFactory;
-        ModifyData.AssertModificationPossible(_context, _contextFactory);
+        await using var contextFactory = await SimpleFileBasedCtxFactory.New();
+        await RunAndAssertTests(contextFactory);
     }
 
     [Test]
     public async Task SpecificFactory_UsingManualConstructor()
     {
-        using var contextFactory = await SimpleFileBasedCtxFactory.New(o => new SimpleDbContext(o));
-        var articles = contextFactory.CreateDbContext().Articles.Include(a => a.Prices).ToList();
-        SeedData.AssertCorrectData(articles);
-        _context = contextFactory.CreateDbContext();
-        _contextFactory = contextFactory;
-        ModifyData.AssertModificationPossible(_context, _contextFactory);
+        await using var contextFactory = await SimpleFileBasedCtxFactory.New(o => new SimpleDbContext(o));
+        await RunAndAssertTests(contextFactory);
     }
 
     [Test]
     public async Task SpecificFactory_ProvidingOwnNewFunc()
     {
-        using var contextFactory = await SimpleFileBasedCtxFactory.NewFuncWithoutReflection();
-        var articles = contextFactory.CreateDbContext().Articles.Include(a => a.Prices).ToList();
-        SeedData.AssertCorrectData(articles);
-        _context = contextFactory.CreateDbContext();
+        await using var contextFactory = await SimpleFileBasedCtxFactory.NewFuncWithoutReflection();
+        await RunAndAssertTests(contextFactory);
+    }
+    
+    private async Task RunAndAssertTests(FileBasedContextFactory<SimpleDbContext> contextFactory)
+    {
+        var articles = (await contextFactory.CreateDbContextAsync()).Articles.Include(a => a.Prices).ToList();
+        SeedData.AssertCorrectSeedData(articles);
+        _context = await contextFactory.CreateDbContextAsync();
         _contextFactory = contextFactory;
-        ModifyData.AssertModificationPossible(_context, _contextFactory);
+        await ModifyData.AssertModificationPossible(_context, _contextFactory);
     }
 }

@@ -5,7 +5,7 @@ namespace TestUtilities.TestUtilities;
 
 public static class SeedData
 {
-    public static void AssertCorrectData(List<Article> articles)
+    public static void AssertCorrectSeedData(List<Article> articles)
     {
         articles.Should().HaveCount(2);
         var a1 = articles.First();

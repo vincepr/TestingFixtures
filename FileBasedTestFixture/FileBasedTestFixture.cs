@@ -18,7 +18,7 @@ public class FileBasedTestFixture<TCtx>
     /// </summary>
     /// <typeparam name="TCtx"><see cref="DbContext"/> of the database-schema tests are run against. </typeparam>
     /// <remarks>DbContext is expected to implement a ctor like: DbContext(DbContextOptions options) </remarks>
-    public FileBasedContextFactory<TCtx> ContextFactory;
+    protected FileBasedContextFactory<TCtx> ContextFactory = null!;
 
     /// <summary>
     /// Identifies a method to be called immediately before each test is run. Initializes the database.

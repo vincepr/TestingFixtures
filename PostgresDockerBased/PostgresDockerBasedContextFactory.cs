@@ -23,7 +23,11 @@ public class PostgresDockerBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, 
         _postgreSqlContainer = postgreSqlContainer;
     }
 
-    // one way is to find constructor via reflection:
+    /// <summary>
+    /// Initializes the <see cref="IDbContextFactory{TContext}"/> by trying to find a suitable constructor via reflection.
+    /// </summary>
+    /// <returns>The <see cref="IDbContextFactory{TContext}"/>.</returns>
+    /// <remarks>DbContext is expected to implement a ctor like: DbContext(DbContextOptions options) </remarks>
     public static async Task<PostgresDockerBasedContextFactory<TCtx>> New()
     {
         PostgreSqlContainer container = await CreateNewTestContainer();
@@ -50,11 +54,16 @@ public class PostgresDockerBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, 
         ConstructorInfo? ctor = type.GetConstructor(new[] { typeof(DbContextOptions<TCtx>) });
         object? instance = ctor?.Invoke(new object[] { options });
         _ = instance as TCtx ?? throw new InvalidOperationException(
-            "Reflection failed. Could not locate ctor. Just provide the ContextFactory manually. ex: 'PostgresDockerBasedContextFactory<MyCtx>.New(opt => MyCtx(opt))'");
+            $"Reflection failed. Could not locate ctor. Just provide the ContextFactory manually. ex:  '{nameof(PostgresDockerBasedContextFactory<TCtx>)}<MyCtx>.New(opt => MyCtx(opt))'");
         return (opts) => (TCtx)ctor?.Invoke(new object[] { opts })!;
     }
 
-    // alternative we provide a way to manually provide it via a factory:
+    /// <summary>
+    /// Initializes the <see cref="IDbContextFactory{TContext}"/>. Requires the user to provide contextFactory.
+    /// This way DbContext implementations with any custom constructors can be used.
+    /// Example: "FileBasedContextFactor.New(opts => new MyContext(opts)"
+    /// </summary>
+    /// <returns>The <see cref="IDbContextFactory{TContext}"/>.</returns>
     public static async Task<PostgresDockerBasedContextFactory<TCtx>> New(
         Func<DbContextOptions<TCtx>, TCtx> contextFactory)
     {

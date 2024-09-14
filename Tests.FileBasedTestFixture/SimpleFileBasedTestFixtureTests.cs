@@ -21,12 +21,12 @@ public class SimpleFileBasedTestFixtureTests : SimpleFileBasedTestFixture
     */
     
     [Test]
-    public void GenericFactory_UsingReflectionForConstructor()
+    public async Task GenericFactory_UsingReflectionForConstructor()
     {
-        var articles = ContextFactory.CreateDbContext().Articles.Include(a => a.Prices).ToList();
-        SeedData.AssertCorrectData(articles);
-        _context = ContextFactory.CreateDbContext();
+        var articles = (await ContextFactory.CreateDbContextAsync()).Articles.Include(a => a.Prices).ToList();
+        SeedData.AssertCorrectSeedData(articles);
+        _context = await ContextFactory.CreateDbContextAsync();
         _contextFactory = ContextFactory;
-        ModifyData.AssertModificationPossible(_context, _contextFactory);
+        await ModifyData.AssertModificationPossible(_context, _contextFactory);
     }
 }

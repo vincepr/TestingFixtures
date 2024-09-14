@@ -6,7 +6,7 @@ namespace TestUtilities.TestUtilities;
 
 public static class ModifyData
 {
-    public static void AssertModificationPossible(SimpleDbContext context,
+    public static async Task AssertModificationPossible(SimpleDbContext context,
         IDbContextFactory<SimpleDbContext> contextFactory)
     {
         // Assert Context working
@@ -15,11 +15,11 @@ public static class ModifyData
             Ean = "99",
             Title = "99",
         });
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         // Assert ContextFactory working
-        using var ctx = contextFactory.CreateDbContext();
-        var articles = ctx.Articles.Include(a => a.Prices).ToList();
+        await using var ctx = await contextFactory.CreateDbContextAsync();
+        var articles = await ctx.Articles.Include(a => a.Prices).ToListAsync();
         articles.Should().HaveCount(3);
         articles.Single(a => a.Ean == "99").Prices.Add(new Price
         {
@@ -27,13 +27,15 @@ public static class ModifyData
             Currency = CountryCurrency.GBP,
             Value = 99.99M,
         });
-        ctx.SaveChanges();
-
+        articles.Single(a => a.Ean == "16556324").Prices = new List<Price>();
+        await ctx.SaveChangesAsync();
 
         // Assert changes persisted
-        using var ctxWithModification = contextFactory.CreateDbContext();
-        ctxWithModification.Prices
-            .Include(p => p.Article)
-            .Single(p => p.Article.Ean == "99").Value.Should().Be(99.99M);
+        await using var ctxWithModification = await contextFactory.CreateDbContextAsync();
+        var prices = await ctxWithModification.Prices.Include(p => p.Article).ToListAsync();
+        prices.Single(p => p.Article.Ean == "99").Value.Should().Be(99.99M);
+
+        // Assert Delete working
+        prices.Should().NotContain(price => price.Article.Ean == "16556324");
     }
 }
