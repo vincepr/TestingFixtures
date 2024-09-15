@@ -16,7 +16,6 @@ public class PostgresDockerTestFixture<TCtx>
     /// <summary>
     /// The exposed ContextFactory. Each Test-Run will receive its own instance of a fresh sqlite-database.
     /// </summary>
-    /// <typeparam name="TCtx"><see cref="DbContext"/> of the database-schema tests are run against. </typeparam>
     /// <remarks>DbContext is expected to implement a ctor like: DbContext(DbContextOptions options) </remarks>
     protected PostgresDockerContextFactory<TCtx> ContextFactory = null!;
     
