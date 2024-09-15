@@ -3,6 +3,6 @@ using TestUtilities.DatabaseContexts;
 
 namespace Tests.FileBasedTestFixture;
 
-public class SimpleFileBasedTestFixture : FileBasedTestFixture<SimpleDbContext>
+public abstract class SimpleFileBasedTestFixture : FileBasedTestFixture<SimpleDbContext>
 {
 }

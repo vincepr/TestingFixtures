@@ -13,7 +13,7 @@ public class CustomFileBasedFixture : FileBasedTestFixture<CustomDbContext>
     [SetUp]
     public override async Task BaseSetUp()
     {
-        ContextFactory = await FileBasedContextFactory<CustomDbContext>.New(o => new CustomDbContext(o, AmountSold));
+        ContextFactory = await FileBasedContextFactory<CustomDbContext>.NewAsync(o => new CustomDbContext(o, AmountSold));
     }
     
     [Test]

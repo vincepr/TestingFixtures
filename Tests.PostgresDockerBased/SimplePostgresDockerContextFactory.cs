@@ -14,5 +14,5 @@ public class SimplePostgresDockerContextFactory : PostgresDockerContextFactory<S
     }
     
     public static Task<PostgresDockerContextFactory<SimpleDbContext>> NewFuncWithoutReflection() 
-        => New(opts => new SimpleDbContext(opts));
+        => NewAsync(opts => new SimpleDbContext(opts));
 }

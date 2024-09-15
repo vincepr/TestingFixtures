@@ -10,7 +10,7 @@ namespace TestingFixtures;
 /// <remarks>DbContext is expected to implement a ctor like: DbContext(DbContextOptions options) </remarks>
 [TestFixture]
 [FixtureLifeCycle(LifeCycle.InstancePerTestCase)] 
-public class FileBasedTestFixture<TCtx>
+public abstract class FileBasedTestFixture<TCtx>
     where TCtx : DbContext
 {
     /// <summary>
@@ -25,7 +25,7 @@ public class FileBasedTestFixture<TCtx>
     [SetUp]
     public virtual async Task BaseSetUp()
     {
-        ContextFactory = await FileBasedContextFactory<TCtx>.New();
+        ContextFactory = await FileBasedContextFactory<TCtx>.NewAsync();
     }
     
     /// <summary>

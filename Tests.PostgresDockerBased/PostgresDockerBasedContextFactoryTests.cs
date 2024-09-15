@@ -16,7 +16,7 @@ public class PostgresDockerBasedContextFactoryTests
     [Test]
     public async Task GenericFactory_UsingReflectionForConstructor()
     {
-        await using var contextFactory = await PostgresDockerContextFactory<SimpleDbContext>.New();
+        await using var contextFactory = await PostgresDockerContextFactory<SimpleDbContext>.NewAsync();
         await RunAndAssertTests(contextFactory);
     }
 
@@ -25,7 +25,7 @@ public class PostgresDockerBasedContextFactoryTests
     public async Task GenericFactory_UsingManualConstructor()
     {
         await using var contextFactory =
-            await PostgresDockerContextFactory<SimpleDbContext>.New(o => new SimpleDbContext(o));
+            await PostgresDockerContextFactory<SimpleDbContext>.NewAsync(o => new SimpleDbContext(o));
         await RunAndAssertTests(contextFactory);
     }
 
@@ -33,7 +33,7 @@ public class PostgresDockerBasedContextFactoryTests
     [Test]
     public async Task SpecificFactory_UsingReflectionForConstructor()
     {
-        await using var contextFactory = await SimplePostgresDockerContextFactory.New();
+        await using var contextFactory = await SimplePostgresDockerContextFactory.NewAsync();
         await RunAndAssertTests(contextFactory);
     }
 
@@ -41,7 +41,7 @@ public class PostgresDockerBasedContextFactoryTests
     [Test]
     public async Task SpecificFactory_UsingManualConstructor()
     {
-        await using var contextFactory = await SimplePostgresDockerContextFactory.New(o => new SimpleDbContext(o));
+        await using var contextFactory = await SimplePostgresDockerContextFactory.NewAsync(o => new SimpleDbContext(o));
         await RunAndAssertTests(contextFactory);
     }
 

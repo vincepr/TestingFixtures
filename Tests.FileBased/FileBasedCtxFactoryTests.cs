@@ -28,28 +28,28 @@ public class FileBasedCtxFactoryTests
     [Test]
     public async Task GenericFactory_UsingReflectionForConstructor()
     {
-        await using var contextFactory = await FileBasedContextFactory<SimpleDbContext>.New();
+        await using var contextFactory = await FileBasedContextFactory<SimpleDbContext>.NewAsync();
         await RunAndAssertTests(contextFactory);
     }
 
     [Test]
     public async Task GenericFactory_UsingManualConstructor()
     {
-        await using var contextFactory = await FileBasedContextFactory<SimpleDbContext>.New(o => new SimpleDbContext(o));
+        await using var contextFactory = await FileBasedContextFactory<SimpleDbContext>.NewAsync(o => new SimpleDbContext(o));
         await RunAndAssertTests(contextFactory);
     }
     
     [Test]
     public async Task SpecificFactory_UsingReflectionForConstructor()
     {
-        await using var contextFactory = await SimpleFileBasedCtxFactory.New();
+        await using var contextFactory = await SimpleFileBasedCtxFactory.NewAsync();
         await RunAndAssertTests(contextFactory);
     }
 
     [Test]
     public async Task SpecificFactory_UsingManualConstructor()
     {
-        await using var contextFactory = await SimpleFileBasedCtxFactory.New(o => new SimpleDbContext(o));
+        await using var contextFactory = await SimpleFileBasedCtxFactory.NewAsync(o => new SimpleDbContext(o));
         await RunAndAssertTests(contextFactory);
     }
 

@@ -15,7 +15,7 @@ public class FactoriesManuallyConstructedTests
     {
         const uint amountSold = 10;
         _contextFactory = await FileBasedContextFactory<CustomDbContext>
-            .New(opts => new CustomDbContext(opts, amountSold));
+            .NewAsync(opts => new CustomDbContext(opts, amountSold));
         var sales = (await _contextFactory.CreateDbContextAsync()).Sales;
         foreach (var sale in sales)
         {
@@ -31,7 +31,7 @@ public class FactoriesManuallyConstructedTests
     {
         const uint amountSold = 10;
         _contextFactory = await PostgresDockerContextFactory<CustomDbContext>
-            .New(opts => new CustomDbContext(opts, amountSold));
+            .NewAsync(opts => new CustomDbContext(opts, amountSold));
         var sales = (await _contextFactory.CreateDbContextAsync()).Sales;
         foreach (var sale in sales)
         {

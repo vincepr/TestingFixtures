@@ -12,5 +12,5 @@ public class SimpleFileBasedCtxFactory : FileBasedContextFactory<SimpleDbContext
     }
 
     public static Task<FileBasedContextFactory<SimpleDbContext>> NewFuncWithoutReflection() 
-        => New(opts => new SimpleDbContext(opts));
+        => NewAsync(opts => new SimpleDbContext(opts));
 }

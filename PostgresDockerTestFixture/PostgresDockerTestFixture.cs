@@ -10,7 +10,7 @@ namespace TestingFixtures;
 /// <remarks>DbContext is expected to implement a ctor like: DbContext(DbContextOptions options) </remarks>
 [TestFixture]
 [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-public class PostgresDockerTestFixture<TCtx>
+public abstract class PostgresDockerTestFixture<TCtx>
     where TCtx : DbContext
 {
     /// <summary>
@@ -25,7 +25,7 @@ public class PostgresDockerTestFixture<TCtx>
     [SetUp]
     public virtual async Task BaseSetUp()
     {
-        ContextFactory = await PostgresDockerContextFactory<TCtx>.New();
+        ContextFactory = await PostgresDockerContextFactory<TCtx>.NewAsync();
     }
     
     /// <summary>

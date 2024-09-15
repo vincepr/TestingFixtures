@@ -1,11 +1,11 @@
-﻿using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace TestingFixtures;
 
 /// <inheritdoc cref="IDbContextFactory{TContext}"/>
+/// Uses sqlite to create a real file-based-database.
 /// <remarks>DbContext is expected to implement a ctor like: DbContext(DbContextOptions options) </remarks>
-public class FileBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyncDisposable, IDisposable
+public partial class FileBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyncDisposable, IDisposable
     where TCtx : DbContext
 {
     private readonly DbContextOptions<TCtx> _options;
@@ -13,7 +13,8 @@ public class FileBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyncDisp
     private readonly string _filePath;
 
     /// <inheritdoc cref="IDbContextFactory{TContext}"/>
-    protected FileBasedContextFactory(DbContextOptions<TCtx> options, string filePath, Func<DbContextOptions<TCtx>, TCtx> ctxFactory)
+    protected FileBasedContextFactory(DbContextOptions<TCtx> options, string filePath,
+        Func<DbContextOptions<TCtx>, TCtx> ctxFactory)
     {
         _options = options;
         _filePath = filePath;
@@ -21,75 +22,24 @@ public class FileBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyncDisp
     }
     
     /// <summary>
-    /// Initializes the <see cref="IDbContextFactory{TContext}"/> by trying to find a suitable constructor via reflection.
+    /// Implicit conversion to the context for convenience.
     /// </summary>
-    /// <returns>The <see cref="IDbContextFactory{TContext}"/>.</returns>
-    /// <remarks>DbContext is expected to implement a ctor like: DbContext(DbContextOptions options) </remarks>
-    public static async Task<FileBasedContextFactory<TCtx>> New()
-    {
-        var opts = new DbContextOptionsBuilder<TCtx>();
-        var filePath = Path.GetTempFileName();
-        opts.UseSqlite($"Data Source={filePath}.sqlite");
-        var factory =  new FileBasedContextFactory<TCtx>(opts.Options, filePath, CtxFactoryViaReflection(opts.Options));
-        await using var ctx = await factory.CreateDbContextAsync();
-        await ctx.Database.EnsureDeletedAsync();
-        await ctx.Database.EnsureCreatedAsync();
-        return factory;
-    }
-
-    private static Func<DbContextOptions<TCtx>, TCtx> CtxFactoryViaReflection(DbContextOptions<TCtx> options)
-    {
-        // run it once to ensure it crashes on creation:
-        Type type = typeof(TCtx);
-        ConstructorInfo? ctor = type.GetConstructor(new[] { typeof(DbContextOptions<TCtx>) });
-        object? instance = ctor?.Invoke(new object[] { options });
-        _ = instance as TCtx ?? throw new InvalidOperationException($"Reflection failed. Could not locate ctor. Just provide the ContextFactory manually. ex: '{nameof(FileBasedContextFactory<TCtx>)}<MyCtx>.New(opt => MyCtx(opt))'");
-        return (opts) => (TCtx)ctor?.Invoke(new object[] { opts })!;
-    }
-    
-    /// <summary>
-    /// Initializes the <see cref="IDbContextFactory{TContext}"/>. Requires the user to provide contextFactory.
-    /// This way DbContext implementations with any custom constructors can be used.
-    /// Example: "FileBasedContextFactor.New(opts => new MyContext(opts)"
-    /// </summary>
-    /// <returns>The <see cref="IDbContextFactory{TContext}"/>.</returns>
-    public static async Task<FileBasedContextFactory<TCtx>> New(Func<DbContextOptions<TCtx>, TCtx> contextFactory)
-    {
-        var opts = new DbContextOptionsBuilder<TCtx>();
-        var filePath = Path.GetTempFileName();
-        opts.UseSqlite($"Data Source={filePath}.sqlite");
-        var factory =  new FileBasedContextFactory<TCtx>(opts.Options, filePath, contextFactory);
-        await using var ctx = await factory.CreateDbContextAsync();
-        await ctx.Database.EnsureDeletedAsync();
-        await ctx.Database.EnsureCreatedAsync();
-        return factory;
-    }
+    /// <param name="self">The context-factory itself.</param>
+    /// <returns>A single context created from that context-factory.</returns>
+    public static implicit operator TCtx(FileBasedContextFactory<TCtx> self) => self.CreateDbContext(); 
 
     /// <inheritdoc />
     public TCtx CreateDbContext()
     {
         return _ctxFactory(_options);
     }
-    
+
     /// <inheritdoc />
     public Task<TCtx> CreateDbContextAsync(CancellationToken cancellationToken = default)
         => Task.FromResult(CreateDbContext());
 
     /// <inheritdoc />
     ~FileBasedContextFactory()
-    {
-        try
-        {
-            Cleanup();
-        }
-        catch
-        {
-            // ignored
-        } 
-    }
-
-    /// <inheritdoc />
-    public void Dispose()
     {
         try
         {
@@ -108,13 +58,27 @@ public class FileBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyncDisp
         {
             Cleanup();
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            // ignored
-            return ValueTask.FromException(e);
+            return ValueTask.FromException(ex);
         }
+
         return ValueTask.CompletedTask;
+
     }
 
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        try
+        {
+            Cleanup();
+        }
+        catch
+        {
+            // ignored
+        }
+    }
+    
     private void Cleanup() => File.Delete(_filePath);
 }
