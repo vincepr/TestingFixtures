@@ -11,3 +11,102 @@ Quickly setup tests for your .NET-EntityFrameWorkCore classes that use DbContext
 # TODO:
 * [publishing a nuget package using github actions](https://www.meziantou.net/publishing-a-nuget-package-following-best-practices-using-github.htm)
 
+# Usage
+## Examples
+
+- For the no-setup reflection based .New() function to work your custom DbContext is expected
+  to have an constructor taking in soley `(DbContextOptions options)` or `(DbContextOptions<MyDbContext> options)`
+```csharp
+public class MyDbContext : DbContext
+{
+    public CustomDbContext(DbContextOptions options) : base(options)
+    {
+    }
+
+    public DbSet<Article> Articles { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<Article>().HasData(
+            new Article
+            {
+                Ean = "16556324",
+                Title = "Sound absorbing dog bed",
+            },
+            new Article
+            {
+                Ean = "80295631",
+                Title = "Birdhouse Wood",
+            }
+        );
+    }
+    
+    public record Article
+    {
+        [Key] public string Ean { get; set; }
+        public string Title { get; set; }
+    }
+}
+```
+
+- We have some Repository or Process that directly accesses the db. That we intend to test directly or in an
+combined integration test scenario.
+```csharp
+public class SomeProcessWithDbAccess(IDbContextFactory<MyDbContext> _contextFactory)
+{
+    public async Task AddArticle(ArticleDto article)
+    {
+        await using var ctx = await _contextFactory.CreateDbContextAsync();
+        ctx.Articles.Add(new Article
+        {
+            Ean = article.Title,
+            Title = article.Ean,
+        })
+        await ctx.SaveChangesAsync();
+    }
+}
+```
+
+- Using The `FileBasedContextFactory<TCtx>` or the `PostgresDockerContextFactory<TCtx>` it is possible to directly
+test against a real database. Independent of Nunit.
+```csharp
+public class SomeProcessWithDbAccessTests
+{
+    [Test]
+    public async Task Article_CorrectlyAdded()
+    {
+        // Arrange
+        using var contextFactory = await FileBasedContextFactory<MyDbcontext>.New();
+        var articleToAdd = new ArticleDto{ Ean = "22222222", Title = "Pair of wool gloves, red"}
+        
+        // Act
+        new SomeProcessWithDbAccess(contextFactory).AddArticle(articleToAdd);
+        
+        // Assert
+        contextFactory.CreateDbContext().Articles
+            .Should().ContainSingle(a => a.Ean == "22222222" && Title == "Pair of wool gloves, red" )
+    }
+}
+```
+
+- Using Nunit there is the convenience implementation of a TestFixture:
+```csharp
+public class SomeProcessWithDbAccessTests : FileBasedTestFixture<MyDbContext>
+{
+    [Test]
+    public async Task Article_CorrectlyAdded()
+    {
+        // Arrange
+        var articleToAdd = new ArticleDto{ Ean = "22222222", Title = "Pair of wool gloves, red"}
+        
+        // Act
+        new SomeProcessWithDbAccess(ContextFactory).AddArticle(articleToAdd);
+        
+        // Assert
+        ContextFactory.CreateDbContext().Articles
+            .Should().ContainSingle(a => a.Ean == "22222222" && Title == "Pair of wool gloves, red" )
+    }
+}
+```
+
