@@ -1,22 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <OutputType>Library</OutputType>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <DebugType>embedded</DebugType>
+        <Deterministic>true</Deterministic>
+
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <DebugSymbols>true</DebugSymbols>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
         <RootNamespace>TestingFixtures</RootNamespace>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <AssemblyName>TestingFixtures.FileBasedTestFixture</AssemblyName>
         <PackageReadmeFile>README.md</PackageReadmeFile>
 
         <PackageId>TestingFixtures.FileBasedTestFixture</PackageId>
         <Version>0.1.0</Version>
     </PropertyGroup>
-    <ItemGroup><None Include="..\README.md" Pack="true" PackagePath="\"/></ItemGroup>
+    <ItemGroup>
+        <None Include="..\README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
     <PropertyGroup Label="Package info">
         <Authors>Vincepr</Authors>
