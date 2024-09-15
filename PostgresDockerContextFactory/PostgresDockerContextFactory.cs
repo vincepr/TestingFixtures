@@ -87,6 +87,7 @@ public class PostgresDockerContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyn
     public Task<TCtx> CreateDbContextAsync(CancellationToken cancellationToken = default)
         => Task.FromResult(CreateDbContext());
 
+    /// <inheritdoc />
     ~PostgresDockerContextFactory()
     {
         try

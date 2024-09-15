@@ -75,6 +75,7 @@ public class FileBasedContextFactory<TCtx> : IDbContextFactory<TCtx>, IAsyncDisp
     public Task<TCtx> CreateDbContextAsync(CancellationToken cancellationToken = default)
         => Task.FromResult(CreateDbContext());
 
+    /// <inheritdoc />
     ~FileBasedContextFactory()
     {
         try
