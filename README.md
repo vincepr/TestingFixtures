@@ -36,7 +36,7 @@ public class SomeProcessWithDbAccessTests
 }
 ```
 
-- When using Nunit there is the convenience implementation with a TestFixture:
+- When using Nunit there is the convenience implementation for sqlite: `FileBasedTestFixture<TCtx>` and posgres: `PostgresDockerTestFixture<TCtx>` using a TestFixture.
 ```csharp
 public class SomeProcessWithDbAccessTests : FileBasedTestFixture<MyDbContext>
 {
